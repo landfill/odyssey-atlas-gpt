@@ -1,0 +1,6 @@
+{
+  "realMouseDrag": "passed",
+  "explicitAutoplayAdvancedFrom1To2": "passed",
+  "autoplayCanBePaused": "passed",
+  "note": "Native hidden-tab lifecycle and reload persistence not exercised."
+}

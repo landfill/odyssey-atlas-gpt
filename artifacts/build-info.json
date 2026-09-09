@@ -1,0 +1,25 @@
+{
+  "artifact": "dist/ODYSSEY.html",
+  "bytes": 350780,
+  "sha256": "c12cdfdbcd24bbb8962555a27047435fae2b98eeff385badb86fa4e650fddced",
+  "environment": {
+    "Node": "22.16.0",
+    "TypeScript": "5.8.3 (core check and offline transpiler)",
+    "Chromium": "144.0.7559.96",
+    "React": "19.1.1"
+  },
+  "checks": [
+    {
+      "command": "node --check dist/assets/app.js",
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": "tsc --noEmit --strict --noUnusedLocals --noUnusedParameters --target ES2020 --module ESNext --moduleResolution bundler --lib ES2020,DOM src/graphics/renderer.ts src/content/storage.ts",
+      "returncode": 0,
+      "output": ""
+    }
+  ],
+  "fullReactViteBuild": "not executed (package network blocked)",
+  "hostedDeployment": "not performed"
+}

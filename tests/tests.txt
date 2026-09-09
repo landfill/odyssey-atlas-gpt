@@ -1,0 +1,60 @@
+# Tests
+
+## Test 1 - 항해와 장 상태의 동기화 [sanity]
+Viewport: desktop (1280x800)
+Covers: first-render SVG world, story start, previous/next navigation, chapter selector, ship and camera tracking, progress persistence
+Description: 핵심 항해를 실제 조작하고 새로고침 후 현재 장이 유지되는지 검증한다.
+Steps:
+1. 처음부터 버튼을 누르고 초기화를 확인한 뒤 항해 시작을 누른다.
+2. 다음 장을 눌러 이스마로스의 설명과 타임라인 선택을 확인한다.
+3. 이전 장을 눌러 트로이로 돌아간다.
+4. 여정 목록에서 폴리페모스의 동굴을 선택하고 브라우저를 새로고침한다.
+Expected: 트로이와 이스마로스 사이를 이동할 때 지도·선박·장 번호·패널이 함께 바뀐다. 새로고침 후 제4장 폴리페모스의 동굴이 유지된다.
+
+## Test 2 - 자유 탐색과 의미 있는 탐색 지점
+Viewport: desktop (1280x800)
+Covers: drag, zoom, bounded rotation, reset, free exploration, restore tracking, hotspot selection, scene slider, parallel narratives, source disclosure
+Description: 시점 변경과 탐색 지점이 실제 장면과 설명에 반영되는지 확인한다.
+Steps:
+1. 자유 탐색을 선택한다. 지도를 드래그하고 확대와 시점 회전 버튼을 사용한다.
+2. 전체 지도 버튼으로 돌아간다. 여정 목록에서 키르케의 아이아이에를 선택한다.
+3. 마법의 잔 탐색 지점을 선택하고 장면 진행 슬라이더를 변경한다.
+4. 스킬라와 카리브디스 장으로 이동하고 슬라이더를 변경한다.
+5. 이타카 귀환으로 이동해 이타카의 기다림과 아버지를 찾는 길을 열고 닫는다.
+6. 항해 따라가기와 원작·연출 구분을 선택한다.
+Expected: 시점이 실제로 변하고 복원된다. 탐색 설명·변신 장면·해협의 배 위치가 반영된다. 병행 서사는 별도 보조 설명으로 표시되고 원작과 시각적 해석의 구분이 보인다.
+
+## Test 3 - 경계·연속 선택·저장 실패 방어
+Viewport: desktop (1280x800)
+Covers: first/last chapter guardrails, all 15 chapters, rapid transition cancellation, malformed or unavailable storage fallback, reset
+Description: 유효 범위를 벗어난 이동과 연속 입력에서 최종 선택 상태가 유지되는지 검사한다.
+Steps:
+1. 처음부터를 누르고 초기화를 확인한 뒤 첫 장에서 이전 장 버튼의 비활성화를 확인한다.
+2. 타임라인 또는 여정 목록으로 15개 장을 순서대로 선택한다.
+3. 마지막 장에서 다음 장이 비활성화되는지 확인한다.
+4. 서로 다른 세 장을 빠르게 선택하고 마지막으로 세이렌의 바다를 선택한다.
+5. 처음부터 버튼을 누르고 취소 시 기록이 유지되는지 확인한다. 다시 처음부터를 누른 뒤 초기화를 확인한다.
+Expected: 15개 장에 실제 설명과 장면이 있다. 경계를 넘어가지 않으며 마지막 입력인 세이렌의 바다가 최종 표시된다. 초기화 후 트로이로 돌아간다. 저장 파싱과 접근 실패는 코드 및 별도 자동화 검사로 검증한다.
+
+## Test 4 - 모바일 탐색과 하단 설명
+Viewport: mobile (375x667)
+Covers: responsive map, bottom-sheet expansion, touch targets, mobile chapter selection, mobile detail reading, accessible list
+Description: 모바일에서 지도를 유지한 채 설명과 장소를 선택할 수 있는지 확인한다.
+Steps:
+1. 항해 시작을 누른 뒤 이야기 펼치기를 누른다.
+2. 설명을 스크롤하고 탐색 지점 하나를 선택한다.
+3. 이야기 접기를 누르고 여정 목록에서 칼립소의 오기기아를 선택한다.
+4. 확대·축소·전체 지도를 사용한다.
+Expected: 페이지의 가로 넘침이 없다. 하단 시트는 지도를 완전히 대체하지 않으며 선택된 제12장과 탐색 설명이 읽힌다. 조작 버튼이 잘리지 않는다.
+
+## Test 5 - 모션·키보드·설정
+Viewport: desktop (1280x800)
+Covers: play/pause, opt-in autoplay, reduced motion, OS reduced-motion preference, settings persistence, keyboard previous/next and Escape, hidden-tab pause
+Description: 움직임 제어와 키보드 탐색이 상태와 함께 동작하는지 확인한다.
+Steps:
+1. 일시정지 버튼을 누르고 다음 장으로 이동한다. 텍스트와 지도 조작 가능 여부를 확인한다.
+2. 설정에서 모션 축소를 활성화하고 장을 바꾼다.
+3. 설정을 닫고 오른쪽·왼쪽 방향키로 장을 이동한다.
+4. 탐색 지점이나 여정 목록을 열고 Escape로 닫는다.
+5. 설정에서 모션 축소를 해제하고 자동 항해를 활성화한 뒤 일시정지한다. 새로고침한다.
+Expected: 일시정지·모션 축소에서도 내용 탐색이 가능하다. 설정이 유지되며 자동 항해는 사용자 선택으로만 시작된다. OS 모션 축소는 자동화 검사로 확인한다. 실제 탭 비활성화와 새로고침 후 저장 유지 여부는 일반 브라우저 환경에서 추가 확인한다.

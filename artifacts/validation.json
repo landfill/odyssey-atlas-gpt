@@ -1,0 +1,68 @@
+{
+  "execution": "Chromium set_content (navigation blocked by environment policy)",
+  "viewport": [
+    "1280x800",
+    "375x667"
+  ],
+  "results": [
+    {
+      "name": "01 모든 15장·타임라인·선박·경계 이동",
+      "status": "passed",
+      "seconds": 3.29,
+      "detail": {
+        "chapters": [
+          "트로이",
+          "이스마로스",
+          "로토파고이의 땅",
+          "폴리페모스의 동굴",
+          "아이올로스의 섬",
+          "라이스트뤼고네스의 항구",
+          "키르케의 아이아이에",
+          "저승의 경계",
+          "세이렌의 바다",
+          "스킬라와 카리브디스",
+          "태양신의 섬",
+          "칼립소의 오기기아",
+          "파이아케스인의 스케리아",
+          "이타카 귀환",
+          "활의 시험과 재회"
+        ],
+        "noCanvasOrRaster": true,
+        "finalNavigationDisabled": true
+      }
+    },
+    {
+      "name": "02 자유 탐색·사건 슬라이더·보조 서사",
+      "status": "passed",
+      "seconds": 3.11,
+      "detail": "Zoom/yaw changed projected geometry; slide changed ship+event; wreck→raft; same coast in chapters14/15; both parallel stories/source modal"
+    },
+    {
+      "name": "03 초기화 보호·모션 축소·저장 차단 대응",
+      "status": "passed",
+      "seconds": 1.53,
+      "detail": "Reset cancellation/confirmation; storage denied fallback; OS motion setting respected; geometry stable; keyboard navigation"
+    },
+    {
+      "name": "04 모바일 터치·하단 시트·장 선택",
+      "status": "passed",
+      "seconds": 2.29,
+      "detail": "375×667: touch start, sheet, hotspot, chapter list, real browser two-pointer pinch, zoom/follow, no page horizontal overflow"
+    },
+    {
+      "name": "05 전환 취소·일시정지·사용자 설정",
+      "status": "passed",
+      "seconds": 6.21,
+      "detail": "Rapid transitions settle on latest chapter; pause stops ship+event, resume animates; opt-in auto; high quality/manual reduced setting"
+    }
+  ],
+  "runtimeErrors": [],
+  "notVerified": [
+    "Native file:// launch",
+    "Native origin/localStorage persistence",
+    "Safari/Firefox",
+    "60fps target",
+    "Hosted deployment",
+    "Full React/Vite dependency build"
+  ]
+}

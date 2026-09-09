@@ -1,0 +1,30 @@
+{
+  "runtime": "v22.16.0",
+  "storage": "Injected in-memory adapter, not native browser persistence",
+  "results": [
+    {
+      "name": "15개 장과 14개 장소, 동일한 이타카 해안",
+      "status": "passed"
+    },
+    {
+      "name": "모든 장면의 유효한 3차원 정점과 모델",
+      "status": "passed"
+    },
+    {
+      "name": "곡선의 양 끝점과 카메라 회전 투영",
+      "status": "passed"
+    },
+    {
+      "name": "메모리 저장 어댑터: 저장과 복구",
+      "status": "passed"
+    },
+    {
+      "name": "손상되거나 범위를 벗어난 저장값의 검증",
+      "status": "passed"
+    },
+    {
+      "name": "저장 권한 거부 시 기본값과 오류 없는 폴백",
+      "status": "passed"
+    }
+  ]
+}
