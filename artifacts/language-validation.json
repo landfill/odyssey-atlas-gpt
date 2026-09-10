@@ -1,0 +1,10 @@
+{
+  "results": [
+    "Keyboard language switch preserves chapter, discovery, slider, geometry and journey storage; choice survives reload",
+    "All 15 chapters, discoveries, SVG labels, settings, chapter list, source notes and both companion stories are English",
+    "Restart retains language; switching back to Korean survives reload",
+    "English browser default and both language layouts work at 320, 375 and 760px; mobile chapter selection and expanded discoveries work",
+    "Blocked storage still allows browser-language detection, switching and navigation"
+  ],
+  "browser_errors": []
+}

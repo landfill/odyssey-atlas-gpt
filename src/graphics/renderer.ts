@@ -1,13 +1,15 @@
 import { chapters } from '../content/chapters';
+import { getChapters } from '../content/chapters.en';
+import { chapterLabel, type Language } from '../content/language';
 import { V, add, sub, dot, normal, shade, normalize, project, viewDirection, clamp, mix, cubic, curveTangent, smooth, lerp, type Camera, type Vec3 } from './math';
 import { face, line, transform, type Model, type Face } from './geometry';
 import { island, ship, eventModel } from './models';
 const NS='http://www.w3.org/2000/svg';
-export interface RendererState { index:number; started:boolean; follow:boolean; paused:boolean; reduced:boolean; progress:number; quality:'auto'|'high'|'low'; hotspot:number|null }
+export interface RendererState { language:Language; index:number; started:boolean; follow:boolean; paused:boolean; reduced:boolean; progress:number; quality:'auto'|'high'|'low'; hotspot:number|null }
 export interface RendererCallbacks { onChapter:(index:number)=>void; onHotspot:(index:number)=>void; onExplore:()=>void; onTransition:(active:boolean)=>void }
 interface PathData { d:string; fill:string; stroke:string; width:number; opacity:number; depth:number }
 interface Flight { start:number; duration:number; from:Camera; to:Camera; shipFrom:Vec3; shipTo:Vec3; fromIndex:number; movingShip:boolean }
-const initialState:RendererState={index:0,started:false,follow:true,paused:false,reduced:false,progress:.15,quality:'auto',hotspot:null};
+const initialState:RendererState={language:'ko',index:0,started:false,follow:true,paused:false,reduced:false,progress:.15,quality:'auto',hotspot:null};
 const escape=(s:string)=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const light=normalize(V(-.55,1,-.48));
 export class AtlasRenderer {
@@ -55,7 +57,7 @@ export class AtlasRenderer {
   if(old.progress!==state.progress){if(this.flight&&this.flight.movingShip)this.finishFlight();this.shipPosition=this.eventShipPosition();this.dirty=true;}
   if(old.hotspot!==state.hotspot){this.dirty=true;if(state.hotspot!==null){const h=chapters[state.index].hotspots[state.hotspot];this.overview=false;this.beginFlight({target:add(chapters[state.index].position,h.offset),yaw:this.camera.yaw,elevation:state.index===3?.36:.7,zoom:Math.min(4.2,Math.min(this.width/160,this.height/150))},false,state.index);}}
   if(old.reduced!==state.reduced||old.paused!==state.paused){if((state.reduced||state.paused)&&this.flight)this.finishFlight();this.dirty=true;}
-  if(old.quality!==state.quality)this.dirty=true;
+  if(old.quality!==state.quality||old.language!==state.language)this.dirty=true;
   this.svg.dataset.chapter=String(state.index+1);this.svg.dataset.motion=state.reduced?'reduced':state.paused?'paused':'running';
  }
  private eventShipPosition():Vec3 {
@@ -157,22 +159,23 @@ export class AtlasRenderer {
   }
  }
  private drawLabels(){
+  const chapters=getChapters(this.state.language);
   const occupied:{x:number;y:number;w:number}[]=[];let html='';
   const indices=[this.state.index,...chapters.map((_,i)=>i).filter(i=>i!==this.state.index&&i!==14&&!(this.state.index===14&&i===13))];
   for(const i of indices){const ch=chapters[i],selected=i===this.state.index;
    if(selected&&!this.overview&&this.camera.zoom>.85)continue;
-   const anchor=add(ch.position,V(0,0,i===13||i===14?146:98));const p=project(anchor,this.camera,this.width,this.height);const w=ch.place.length*10+28;
+   const anchor=add(ch.position,V(0,0,i===13||i===14?146:98));const p=project(anchor,this.camera,this.width,this.height);const w=ch.place.length*(this.state.language==='en'?7:10)+28;
    if(p.x<35||p.x>this.width-35||p.y<18||p.y>this.height-35)continue;
    if(!selected&&occupied.some(q=>Math.abs(q.x-p.x)<(q.w+w)/2+8&&Math.abs(q.y-p.y)<35))continue;
    occupied.push({x:p.x,y:p.y,w});
-   html+=`<g data-place='${i}' role='button' tabindex='0' aria-label='${ch.order}장 ${escape(ch.title)}' class='map-label ${selected?'selected':''}' transform='translate(${p.x.toFixed(1)},${p.y.toFixed(1)})'><rect x='${-w/2}' y='-4' width='${w}' height='42' rx='6' fill='${selected?'#0a1c25':'#0a2531'}' opacity='${selected?.94:.75}'/><circle cy='-10' r='${selected?4.2:2}' fill='${selected?'#dfbc7d':'#9ab0a5'}'/><text text-anchor='middle' y='13' fill='${selected?'#ecddbd':'#c2cabc'}' font-size='${selected?13:11.5}'>${escape(ch.place)}</text>${selected?`<text text-anchor='middle' y='30' font-size='8.2' letter-spacing='2' fill='#b49e77'>${ch.english}</text>`:`<text text-anchor='middle' y='28' font-size='8.5' fill='#8c9d95'>${String(ch.order).padStart(2,'0')}</text>`}</g>`;
+   html+=`<g data-place='${i}' role='button' tabindex='0' aria-label='${chapterLabel(this.state.language,ch.order)} ${escape(ch.title)}' class='map-label ${selected?'selected':''}' transform='translate(${p.x.toFixed(1)},${p.y.toFixed(1)})'><rect x='${-w/2}' y='-4' width='${w}' height='42' rx='6' fill='${selected?'#0a1c25':'#0a2531'}' opacity='${selected?.94:.75}'/><circle cy='-10' r='${selected?4.2:2}' fill='${selected?'#dfbc7d':'#9ab0a5'}'/><text text-anchor='middle' y='13' fill='${selected?'#ecddbd':'#c2cabc'}' font-size='${selected?13:11.5}'>${escape(ch.place)}</text>${selected?`<text text-anchor='middle' y='30' font-size='8.2' letter-spacing='2' fill='#b49e77'>${ch.english}</text>`:`<text text-anchor='middle' y='28' font-size='8.5' fill='#8c9d95'>${String(ch.order).padStart(2,'0')}</text>`}</g>`;
   }
   this.landLabels.innerHTML=html;html='';
   if(!this.overview&&this.camera.zoom>.8){chapters[this.state.index].hotspots.forEach((hotspot,i)=>{
    const p=project(add(chapters[this.state.index].position,hotspot.offset),this.camera,this.width,this.height);
    if(p.x<17||p.x>this.width-17||p.y<25||p.y>this.height-30)return;
    const dx=i===1?30:-30,dy=i===2?22:-26;
-   html+=`<g data-hotspot='${i}' role='button' tabindex='0' aria-label='${escape(hotspot.title)} 탐색' class='hotspot ${this.state.hotspot===i?'selected':''}' transform='translate(${(p.x+dx).toFixed(1)},${(p.y+dy).toFixed(1)})'><path d='M${-dx},${-dy}L0,0' fill='none' stroke='#b89b69' stroke-width='.65' opacity='.65' pointer-events='none'/><circle cx='${-dx}' cy='${-dy}' r='2' fill='#cdb487' pointer-events='none'/><circle r='19' fill='transparent'/><circle r='12' fill='#09232c' stroke='#bc9c69' stroke-width='.8'/><circle r='3' fill='#dbc39b'/><text y='-21' text-anchor='middle' font-size='10' fill='#ecdfc2' paint-order='stroke' stroke='#09232c' stroke-width='3'>${escape(hotspot.title)}</text></g>`;
+   html+=`<g data-hotspot='${i}' role='button' tabindex='0' aria-label='${escape(this.state.language==='en'?`Explore ${hotspot.title}`:`${hotspot.title} 탐색`)}' class='hotspot ${this.state.hotspot===i?'selected':''}' transform='translate(${(p.x+dx).toFixed(1)},${(p.y+dy).toFixed(1)})'><path d='M${-dx},${-dy}L0,0' fill='none' stroke='#b89b69' stroke-width='.65' opacity='.65' pointer-events='none'/><circle cx='${-dx}' cy='${-dy}' r='2' fill='#cdb487' pointer-events='none'/><circle r='19' fill='transparent'/><circle r='12' fill='#09232c' stroke='#bc9c69' stroke-width='.8'/><circle r='3' fill='#dbc39b'/><text y='-21' text-anchor='middle' font-size='10' fill='#ecdfc2' paint-order='stroke' stroke='#09232c' stroke-width='3'>${escape(hotspot.title)}</text></g>`;
   });}
   this.hotspotLabels.innerHTML=html;
  }

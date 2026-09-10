@@ -1,6 +1,8 @@
+import { translate, type Language, type MessageKey } from '../content/language';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Icon } from './Icon';
-export function Modal({title,children,onClose,wide=false}:{title:string;children:ReactNode;onClose:()=>void;wide?:boolean}){
+export function Modal({title,children,onClose,wide=false,language}:{language:Language;title:string;children:ReactNode;onClose:()=>void;wide?:boolean}){
+ const t=(key:MessageKey)=>translate(language,key);
  const panel=useRef<HTMLDivElement|null>(null),close=useRef(onClose);close.current=onClose;
  useEffect(()=>{
   const previous=document.activeElement as HTMLElement|null;
@@ -16,5 +18,5 @@ export function Modal({title,children,onClose,wide=false}:{title:string;children
   };
   document.addEventListener('keydown',key);return ()=>{document.removeEventListener('keydown',key);previous?.focus();};
  },[]);
- return <div className='modal-backdrop' onClick={(event:{target:EventTarget;currentTarget:EventTarget})=>{if(event.target===event.currentTarget)onClose();}}><div className={`modal ${wide?'wide':''}`} role='dialog' aria-modal='true' aria-label={title} ref={panel}><div className='modal-header'><h2>{title}</h2><button className='icon-button' onClick={onClose} aria-label='닫기'><Icon name='close'/></button></div><div className='modal-body'>{children}</div></div></div>;
+ return <div className='modal-backdrop' onClick={(event:{target:EventTarget;currentTarget:EventTarget})=>{if(event.target===event.currentTarget)onClose();}}><div className={`modal ${wide?'wide':''}`} role='dialog' aria-modal='true' aria-label={title} ref={panel}><div className='modal-header'><h2>{title}</h2><button className='icon-button' onClick={onClose} aria-label={t("닫기")}><Icon name='close'/></button></div><div className='modal-body'>{children}</div></div></div>;
 }

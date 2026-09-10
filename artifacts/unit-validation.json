@@ -1,5 +1,5 @@
 {
-  "runtime": "v22.16.0",
+  "runtime": "v22.18.0",
   "storage": "Injected in-memory adapter, not native browser persistence",
   "results": [
     {
@@ -24,6 +24,14 @@
     },
     {
       "name": "저장 권한 거부 시 기본값과 오류 없는 폴백",
+      "status": "passed"
+    },
+    {
+      "name": "English content covers all chapters without changing navigation or geometry",
+      "status": "passed"
+    },
+    {
+      "name": "Language preference follows browser locale until explicitly chosen",
       "status": "passed"
     }
   ]
